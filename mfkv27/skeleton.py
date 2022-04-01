@@ -9,6 +9,7 @@
 # THE STANDARD MODULES, TAKE A LOOK IN 'validate_before_handin.py'.
 ############
 
+from line_profiler import LineProfiler
 import os
 import sys
 import time
@@ -320,7 +321,7 @@ added_note = ""
 city_list = list(range(num_cities))
 
 # mutation_probability
-p_mut = 0.1
+p_mut = 0.3
 
 
 # Tour Class
@@ -493,8 +494,10 @@ class GA:
         # new population template
         newP = TourPop(size=P.size, init=True)
 
+        newP.pop[0] = P.fittest
+
         # populate the new generation via the offspring of selected parents
-        for i in range(newP.size):
+        for i in range(1, newP.size):
             # select two parents
             parents = self.roulette_select(P)
             parent1 = parents[0]
@@ -522,6 +525,9 @@ def run_GA(generations, pop_size):
     # create initial population
     population = TourPop(pop_size, init=True)
 
+    # initial best tour length
+    initial_best_tour = population.fittest.length
+
     # initialise best tour
     best_tour = Tour()
 
@@ -534,7 +540,7 @@ def run_GA(generations, pop_size):
         if population.fittest.length < best_tour.length:
             best_tour = copy.deepcopy(population.fittest)
 
-    return best_tour
+    return initial_best_tour, best_tour
 
 
 """
@@ -556,13 +562,18 @@ print('Mutated', mutated_tour.tour)
 my_tour_pop = TourPop(10)
 parents = GA().roulette_select(my_tour_pop)
 print('Parents', parents[0].length, parents[1].length)
-
+"""
 # Test next_generation
+lp = LineProfiler()
+lp_wrapper = lp(GA().next_generation)
+
 my_tour_pop = TourPop(10)
-next_gen = GA().next_generation(my_tour_pop)
+next_gen = lp_wrapper(my_tour_pop)
 print('Old', my_tour_pop.fittest.length)
 print('New', next_gen.fittest.length)
+lp.print_stats()
 
+"""
 # Test Tour Class
 my_tour = Tour()
 print(my_tour.tour)
@@ -576,9 +587,13 @@ print(my_tour_pop.fittest.length)
 print(sum(my_tour_pop.get_pool()))
 """
 
+
 # Test GA
-my_tour = run_GA(500, 100)
+initial_length, my_tour = run_GA(1000, 35)
+
+print('Initial best tour:', initial_length)
 print('Best tour found:', my_tour.length)
+print('Tour:', my_tour.tour)
 
 
 ############
