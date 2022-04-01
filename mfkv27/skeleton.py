@@ -13,6 +13,7 @@ import os
 import sys
 import time
 import random
+import copy
 
 ############
 # NOW PLEASE SCROLL DOWN UNTIL THE NEXT BLOCK OF CAPITALIZED COMMENTS.
@@ -417,7 +418,6 @@ class GA:
         # fill tour with subtour from one parent
         for i in range(start, end):
             child.tour[i] = parent1.tour[i]
-        print(child.tour)
 
         # fill in gaps using cities (in order) from the second parent
         for i in range(len(parent2.tour)):
@@ -518,6 +518,26 @@ class GA:
         return newP
 
 
+def run_GA(generations, pop_size):
+    # create initial population
+    population = TourPop(pop_size, init=True)
+
+    # initialise best tour
+    best_tour = Tour()
+
+    # main loop
+    for _ in range(1, generations):
+        # get next generation
+        population = GA().next_generation(population)
+
+        # update the best if necessary
+        if population.fittest.length < best_tour.length:
+            best_tour = copy.deepcopy(population.fittest)
+
+    return best_tour
+
+
+"""
 # Test crossover...
 parent1 = Tour()
 parent2 = Tour()
@@ -554,6 +574,11 @@ print(my_tour_pop.pop)
 print(my_tour_pop.size)
 print(my_tour_pop.fittest.length)
 print(sum(my_tour_pop.get_pool()))
+"""
+
+# Test GA
+my_tour = run_GA(500, 100)
+print('Best tour found:', my_tour.length)
 
 
 ############
