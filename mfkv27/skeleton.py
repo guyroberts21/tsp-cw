@@ -318,6 +318,9 @@ added_note = ""
 # initialise the list of cities
 city_list = list(range(num_cities))
 
+# mutation_probability
+p_mut = 0.1
+
 
 # Tour Class
 class Tour():
@@ -357,16 +360,20 @@ class TourPop():
     self.size: size of the population
     self.fittest: fittest member of the population (i.e. the shortest tour)
                   - calculated via get_fittest()
+    self.pool: list of probablistic fitness values (tour lengths)
     """
 
-    def __init__(self, size):
+    def __init__(self, size, init=True):
         self.pop = []
         self.size = size
+
         # generate the initial population
-        for _ in range(size):
-            new_tour = Tour()
-            self.pop.append(new_tour)
-        self.get_fittest()
+        if init:
+            for _ in range(size):
+                new_tour = Tour()
+                self.pop.append(new_tour)
+            self.get_fittest()
+            self.get_pool()
 
     def get_fittest(self):
         '''
@@ -375,6 +382,13 @@ class TourPop():
         sorted_pop = sorted(self.pop, key=lambda x: x.length, reverse=False)
         self.fittest = sorted_pop[0]  # fittest = smallest
         return self.fittest
+
+    def get_pool(self):
+        total_tour_lengths = 0
+        for tour in self.pop:
+            total_tour_lengths += tour.length
+        self.pool = list(map(lambda x: x.length/total_tour_lengths, self.pop))
+        return self.pool
 
 
 # Genetic Algorithm methods
@@ -417,6 +431,92 @@ class GA:
         child.calc_tour_len()
         return child
 
+    def mutate(self, T):
+        '''
+        Returns a mutated tour with probability p.
+
+        Mutation - swap two randomly selected cities from the tour.
+        '''
+
+        if random.random() < p_mut:
+
+            # choose two random positions
+            pos1 = random.randint(0, len(T.tour)-1)
+            pos2 = random.randint(0, len(T.tour)-1)
+
+            # check if same
+            if pos1 == pos2:
+                return T
+
+            # swap positions
+            a = T.tour[pos1]
+            b = T.tour[pos2]
+
+            T.tour[pos2] = a
+            T.tour[pos1] = b
+
+            # re-calculate tour length
+            T.calc_tour_len()
+
+        # return mutated tour
+        return T
+
+    def roulette_select(self, P, numParents=2):
+        '''
+        ==== ROULETTE WHEEL SELECTION ====
+
+        Returns (default) 2 parents via the Roulette Model.
+        - Tours with a shorter length are more likely to be selected as parents.
+        '''
+        parents = []
+        while len(parents) < numParents:
+            i = random.randint(0, len(P.pool)-1)
+            # probablistic model and make sure parents are different
+            if P.pool[i] > random.random() and P.pop[i] not in parents:
+                parents.append(P.pop[i])
+        # return the selected parents
+        return parents
+
+    def next_generation(self, P):
+        '''
+        Returns the new generation to be used in the algorithm.
+
+        This method uses previous functions to create a new generation 
+        that should be "better" than the previous one.
+
+        ==== POSSIBLE IMPROVEMENTS ====
+            * Including the "fittest" members of the previous population
+              in the new one
+            * Using a different parent selection method (eg. tournament selection)
+        '''
+
+        # new population template
+        newP = TourPop(size=P.size, init=True)
+
+        # populate the new generation via the offspring of selected parents
+        for i in range(newP.size):
+            # select two parents
+            parents = self.roulette_select(P)
+            parent1 = parents[0]
+            parent2 = parents[1]
+
+            # create child
+            child = self.crossover(parent1, parent2)
+
+            # fill up new population
+            newP.pop[i] = child
+
+        # mutate all tours with probability p = p_mut
+        for tour in newP.pop:
+            if random.random() < p_mut:
+                self.mutate(tour)
+
+        # update best tour and get pool
+        newP.get_fittest()
+        newP.get_pool()
+
+        return newP
+
 
 # Test crossover...
 parent1 = Tour()
@@ -424,7 +524,24 @@ parent2 = Tour()
 child = GA().crossover(parent1, parent2)
 print(parent1.tour)
 print(parent2.tour)
-print(child.tour)
+print('Crossover', child.tour)
+
+# Test mutation
+my_tour = Tour()
+print(my_tour.tour)
+mutated_tour = GA().mutate(my_tour)
+print('Mutated', mutated_tour.tour)
+
+# Test roulette_select
+my_tour_pop = TourPop(10)
+parents = GA().roulette_select(my_tour_pop)
+print('Parents', parents[0].length, parents[1].length)
+
+# Test next_generation
+my_tour_pop = TourPop(10)
+next_gen = GA().next_generation(my_tour_pop)
+print('Old', my_tour_pop.fittest.length)
+print('New', next_gen.fittest.length)
 
 # Test Tour Class
 my_tour = Tour()
@@ -436,6 +553,7 @@ my_tour_pop = TourPop(10)
 print(my_tour_pop.pop)
 print(my_tour_pop.size)
 print(my_tour_pop.fittest.length)
+print(sum(my_tour_pop.get_pool()))
 
 
 ############
