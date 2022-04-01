@@ -315,26 +315,121 @@ added_note = ""
 # NOW YOUR CODE SHOULD BEGIN.
 ############
 
+# initialise the list of cities
+city_list = list(range(num_cities))
 
-############
-# YOUR CODE SHOULD NOW BE COMPLETE AND WHEN EXECUTION OF THIS PROGRAM 'skeleton.py'
-# REACHES THIS POINT, YOU SHOULD HAVE COMPUTED A TOUR IN THE RESERVED LIST VARIABLE 'tour',
-# WHICH HOLDS A LIST OF THE INTEGERS FROM {0, 1, ..., 'num_cities' - 1} SO THAT EVERY INTEGER
-# APPEARS EXACTLY ONCE, AND YOU SHOULD ALSO HOLD THE LENGTH OF THIS TOUR IN THE RESERVED
-# INTEGER VARIABLE 'tour_length'.
-############
 
-############
-# YOUR TOUR WILL BE PACKAGED IN A TOUR FILE OF THE APPROPRIATE FORMAT AND THIS TOUR FILE'S,
-# NAME WILL BE A MIX OF THE NAME OF THE CITY FILE, THE NAME OF THIS PROGRAM AND THE
-# CURRENT DATA AND TIME. SO, EVERY SUCCESSFUL EXECUTION GIVES A TOUR FILE WITH A UNIQUE
-# NAME AND YOU CAN RENAME THE ONES YOU WANT TO KEEP LATER.
-############
+# Tour Class
+class Tour:
+    """
+    Stores all information linked to each tour (in the population)
 
-############
-# DO NOT TOUCH OR ALTER THE CODE BELOW THIS POINT! YOU HAVE BEEN WARNED!
-############
+    self.tour: list of cities (initally random)
+    self.length: length of tour (the complete loop)
+    """
 
+    def __init__(self):
+        # create a random permutation of the cities (a random tour)
+        self.tour = random.sample(city_list, len(city_list))
+        # get the length of the tour
+        self.calc_tour_len()
+
+    def calc_tour_len(self):
+        '''
+        Calculates the length of the tour 
+
+         N.B. dist_matrix has already been built via methods in the code above
+        '''
+        self.length = 0
+        # sum all distances together
+        for city in self.tour:
+            next_city = self.tour[self.tour.index(city) - len(self.tour) + 1]
+            dist = dist_matrix[city][next_city]
+            self.length += dist
+
+
+# A population of Tour objects
+class TourPop:
+    """
+    Stores information on a population of tours
+
+    self.pop: list of tour objects
+    self.size: size of the population
+    self.fittest: fittest member of the population (i.e. the shortest tour)
+                  - calculated via get_fittest()
+    """
+
+    def __init__(self, size):
+        self.pop = []
+        self.size = size
+        # generate the initial population
+        for _ in range(size):
+            new_tour = Tour()
+            self.pop.append(new_tour)
+        self.get_fittest()
+
+    def get_fittest(self):
+        '''
+        Returns the shortest route in the population ("survival of the fittest")
+        '''
+        sorted_pop = sorted(self.pop, key=lambda x: x.length, reverse=False)
+        self.fittest = sorted_pop[0]  # fittest = smallest
+        return self.fittest
+
+
+# Genetic Algorithm methods
+class GA:
+    def crossover(self, parent1, parent2):
+        '''
+        ==== ORDER CROSSOVER (OX) ====
+
+        A simple crossover that combines two parents to produce an offspring.
+
+        This method chooses a random range of each parent and fills in the gaps from the
+        values of the other parent - ensuring that there are no duplicates.
+        '''
+        start = random.randint(0, len(parent1.tour))
+        end = random.randint(0, len(parent1.tour))
+        # swap order if necessary
+        if end < start:
+            x = start
+            start = end
+            end = x
+
+        child = Tour()
+        # initial empty tour
+        for i in range(0, len(child.tour)):
+            child.tour[i] = None
+        # fill tour with subtour from one parent
+        for i in range(start, end):
+            child.tour[i] = parent1.tour[i]
+
+        # fill in gaps using cities (in order) from the second parent
+        for i in range(0, len(child.tour)):
+            city = parent2.tour[i]
+            if city in child.tour:
+                continue
+            if child.tour[i] == None:
+                child.tour[i] = city
+
+        ############
+        # YOUR CODE SHOULD NOW BE COMPLETE AND WHEN EXECUTION OF THIS PROGRAM 'skeleton.py'
+        # REACHES THIS POINT, YOU SHOULD HAVE COMPUTED A TOUR IN THE RESERVED LIST VARIABLE 'tour',
+        # WHICH HOLDS A LIST OF THE INTEGERS FROM {0, 1, ..., 'num_cities' - 1} SO THAT EVERY INTEGER
+        # APPEARS EXACTLY ONCE, AND YOU SHOULD ALSO HOLD THE LENGTH OF THIS TOUR IN THE RESERVED
+        # INTEGER VARIABLE 'tour_length'.
+        ############
+
+        ############
+        # YOUR TOUR WILL BE PACKAGED IN A TOUR FILE OF THE APPROPRIATE FORMAT AND THIS TOUR FILE'S,
+        # NAME WILL BE A MIX OF THE NAME OF THE CITY FILE, THE NAME OF THIS PROGRAM AND THE
+        # CURRENT DATA AND TIME. SO, EVERY SUCCESSFUL EXECUTION GIVES A TOUR FILE WITH A UNIQUE
+        # NAME AND YOU CAN RENAME THE ONES YOU WANT TO KEEP LATER.
+        ############
+
+        ############
+        # DO NOT TOUCH OR ALTER THE CODE BELOW THIS POINT! YOU HAVE BEEN WARNED!
+        ############
 flag = "good"
 length = len(tour)
 for i in range(0, length):
