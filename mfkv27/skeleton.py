@@ -320,7 +320,7 @@ city_list = list(range(num_cities))
 
 
 # Tour Class
-class Tour:
+class Tour():
     """
     Stores all information linked to each tour (in the population)
 
@@ -349,7 +349,7 @@ class Tour:
 
 
 # A population of Tour objects
-class TourPop:
+class TourPop():
     """
     Stores information on a population of tours
 
@@ -398,38 +398,64 @@ class GA:
 
         child = Tour()
         # initial empty tour
-        for i in range(0, len(child.tour)):
+        for i in range(len(child.tour)):
             child.tour[i] = None
         # fill tour with subtour from one parent
         for i in range(start, end):
             child.tour[i] = parent1.tour[i]
+        print(child.tour)
 
         # fill in gaps using cities (in order) from the second parent
-        for i in range(0, len(child.tour)):
+        for i in range(len(parent2.tour)):
             city = parent2.tour[i]
-            if city in child.tour:
-                continue
-            if child.tour[i] == None:
-                child.tour[i] = city
+            if not city in child.tour:
+                for j in range(len(child.tour)):
+                    if child.tour[j] == None:
+                        child.tour[j] = city
+                        break
+        # new tour length
+        child.calc_tour_len()
+        return child
 
-        ############
-        # YOUR CODE SHOULD NOW BE COMPLETE AND WHEN EXECUTION OF THIS PROGRAM 'skeleton.py'
-        # REACHES THIS POINT, YOU SHOULD HAVE COMPUTED A TOUR IN THE RESERVED LIST VARIABLE 'tour',
-        # WHICH HOLDS A LIST OF THE INTEGERS FROM {0, 1, ..., 'num_cities' - 1} SO THAT EVERY INTEGER
-        # APPEARS EXACTLY ONCE, AND YOU SHOULD ALSO HOLD THE LENGTH OF THIS TOUR IN THE RESERVED
-        # INTEGER VARIABLE 'tour_length'.
-        ############
 
-        ############
-        # YOUR TOUR WILL BE PACKAGED IN A TOUR FILE OF THE APPROPRIATE FORMAT AND THIS TOUR FILE'S,
-        # NAME WILL BE A MIX OF THE NAME OF THE CITY FILE, THE NAME OF THIS PROGRAM AND THE
-        # CURRENT DATA AND TIME. SO, EVERY SUCCESSFUL EXECUTION GIVES A TOUR FILE WITH A UNIQUE
-        # NAME AND YOU CAN RENAME THE ONES YOU WANT TO KEEP LATER.
-        ############
+# Test crossover...
+parent1 = Tour()
+parent2 = Tour()
+child = GA().crossover(parent1, parent2)
+print(parent1.tour)
+print(parent2.tour)
+print(child.tour)
 
-        ############
-        # DO NOT TOUCH OR ALTER THE CODE BELOW THIS POINT! YOU HAVE BEEN WARNED!
-        ############
+# Test Tour Class
+my_tour = Tour()
+print(my_tour.tour)
+print(my_tour.length)
+
+# Test the TourPop Class
+my_tour_pop = TourPop(10)
+print(my_tour_pop.pop)
+print(my_tour_pop.size)
+print(my_tour_pop.fittest.length)
+
+
+############
+# YOUR CODE SHOULD NOW BE COMPLETE AND WHEN EXECUTION OF THIS PROGRAM 'skeleton.py'
+# REACHES THIS POINT, YOU SHOULD HAVE COMPUTED A TOUR IN THE RESERVED LIST VARIABLE 'tour',
+# WHICH HOLDS A LIST OF THE INTEGERS FROM {0, 1, ..., 'num_cities' - 1} SO THAT EVERY INTEGER
+# APPEARS EXACTLY ONCE, AND YOU SHOULD ALSO HOLD THE LENGTH OF THIS TOUR IN THE RESERVED
+# INTEGER VARIABLE 'tour_length'.
+############
+
+############
+# YOUR TOUR WILL BE PACKAGED IN A TOUR FILE OF THE APPROPRIATE FORMAT AND THIS TOUR FILE'S,
+# NAME WILL BE A MIX OF THE NAME OF THE CITY FILE, THE NAME OF THIS PROGRAM AND THE
+# CURRENT DATA AND TIME. SO, EVERY SUCCESSFUL EXECUTION GIVES A TOUR FILE WITH A UNIQUE
+# NAME AND YOU CAN RENAME THE ONES YOU WANT TO KEEP LATER.
+############
+
+############
+# DO NOT TOUCH OR ALTER THE CODE BELOW THIS POINT! YOU HAVE BEEN WARNED!
+############
 flag = "good"
 length = len(tour)
 for i in range(0, length):
