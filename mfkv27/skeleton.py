@@ -322,7 +322,9 @@ added_note = ""
 p_mut = 0.3
 num_of_generations = 500
 population_size = 20
-tournament_size = 9
+
+tournament_size = 9  # used in tournament selection (parent selection method)
+elitism_size = 1  # fittest members carry over to next generation
 # ========================================= #
 
 # initialise the list of cities
@@ -384,7 +386,7 @@ class TourPop():
 
     def get_fittest(self):
         '''
-        Returns the shortest route in the population ("survival of the fittest")
+        Returns the shortest tour in the population ("survival of the fittest")
         '''
         sorted_pop = sorted(self.pop, key=lambda x: x.length, reverse=False)
         self.fittest = sorted_pop[0]  # fittest = smallest
@@ -549,7 +551,7 @@ class GA:
         This method uses previous functions to create a new generation 
         that should be "better" than the previous one.
 
-        ==== POSSIBLE IMPROVEMENTS ====
+        ==== POSSIBLE ENHANCEMENTS ====
             * Including the "fittest" members of the previous population
               in the new one
             * Using a different parent selection method (eg. tournament selection)
@@ -558,10 +560,21 @@ class GA:
         # new population template
         newP = TourPop(size=P.size, init=True)
 
-        newP.pop[0] = P.fittest
+        offset = elitism_size
+
+        # use elitism if required
+        if elitism_size == 1:
+            newP.pop[0] = P.fittest
+        elif elitism_size > 1:
+            # list of population sorted via fitness (length)
+            sorted_pop = sorted(
+                self.pop, key=lambda x: x.length, reverse=False)
+            for i in range(1, elitism_size):
+                # add fittest k members to new population
+                newP.pop[i] = sorted_pop[i]
 
         # populate the new generation via the offspring of selected parents
-        for i in range(1, newP.size):
+        for i in range(offset, newP.size):
             # select two parents
             parents = self.roulette_select(P)
             parent1 = parents[0]
@@ -608,6 +621,15 @@ def run_GA(generations, pop_size):
 
 
 """
+# Test the new generation (with elitism)
+my_pop = TourPop(10)
+next_gen = GA().next_generation(my_pop)
+for i in range(my_pop.size):
+    print('Initial:', my_pop.pop[i].tour)
+    print('Next:', next_gen.pop[i].tour)
+print(my_pop.fittest.length)
+print(next_gen.fittest.length)
+
 # Test POS crossover
 parent1 = Tour()
 parent2 = Tour()
