@@ -317,11 +317,16 @@ added_note = ""
 # NOW YOUR CODE SHOULD BEGIN.
 ############
 
+
+# ======== VARIABLE PARAMETERS ============ #
+p_mut = 0.3
+num_of_generations = 500
+population_size = 20
+tournament_size = 9
+# ========================================= #
+
 # initialise the list of cities
 city_list = list(range(num_cities))
-
-# mutation_probability
-p_mut = 0.3
 
 
 # Tour Class
@@ -401,7 +406,7 @@ class GA:
 
         A simple crossover that combines two parents to produce an offspring.
 
-        This method chooses a random range of each parent and fills in the gaps from the
+        This method chooses a random range of one parent and fills in the gaps from the
         values of the other parent - ensuring that there are no duplicates.
         '''
         start = random.randint(0, len(parent1.tour))
@@ -429,6 +434,44 @@ class GA:
                         child.tour[j] = city
                         break
         # new tour length
+        child.calc_tour_len()
+        return child
+
+    def crossover2(self, parent1, parent2):
+        '''
+        ==== POSITION-BASED CROSSOVER (POS) ====
+
+        Another crossover that combines two parents to produce an offspring.
+
+        This method chooses a random (ordered) sample of the first parent then fills in the
+        gaps using the order of the second parent - again, ensuring no duplicate cities.
+        '''
+        # create child tour
+        child = Tour()
+
+        # generate sample cities from first parent
+        sample_size = random.randint(0, len(parent1.tour)-1)
+        sample_cities = [parent1.tour[i] for i in sorted(
+            random.sample(range(len(parent1.tour)), sample_size))]
+
+        # initially empty child tour
+        for i in range(len(child.tour)):
+            child.tour[i] = None
+        # fill child with sample cities
+        for i in range(len(sample_cities)):
+            idx = parent1.tour.index(sample_cities[i])
+            child.tour[idx] = sample_cities[i]
+
+        # fill in the gaps using second parent
+        for i in range(len(parent2.tour)):
+            city = parent2.tour[i]
+            if not city in child.tour:
+                for j in range(len(child.tour)):
+                    if child.tour[j] == None:
+                        child.tour[j] = city
+                        break
+
+        # recalculate tour length
         child.calc_tour_len()
         return child
 
@@ -477,6 +520,27 @@ class GA:
                 parents.append(P.pop[i])
         # return the selected parents
         return parents
+
+    def tournament_select(self, P):
+        '''
+        ==== TOURNAMENT SELECTION ====
+
+        Returns a tour that wins the 'round' of a tournament when compared against 
+        another tour - the highest fitness wins.
+        '''
+
+        # tournament population - without initialisation
+        tournament_population = TourPop(tournament_size, init=False)
+
+        # choose random elements of the population to be in the tournament one
+        for i in range(tournament_population.size - 1):
+            random_tour = random.choice(P.pop)
+            # add random tour to the tournament
+            tournament_population.pop.append(random_tour)
+
+        # return "winner" of the tournament
+        tournament_population.get_fittest()
+        return tournament_population.fittest
 
     def next_generation(self, P):
         '''
@@ -544,6 +608,13 @@ def run_GA(generations, pop_size):
 
 
 """
+# Test POS crossover
+parent1 = Tour()
+parent2 = Tour()
+child = GA().crossover2(parent1, parent2)
+print(parent1.tour)
+print(child)
+
 # Test crossover...
 parent1 = Tour()
 parent2 = Tour()
@@ -562,7 +633,7 @@ print('Mutated', mutated_tour.tour)
 my_tour_pop = TourPop(10)
 parents = GA().roulette_select(my_tour_pop)
 print('Parents', parents[0].length, parents[1].length)
-"""
+
 # Test next_generation
 lp = LineProfiler()
 lp_wrapper = lp(GA().next_generation)
@@ -573,7 +644,6 @@ print('Old', my_tour_pop.fittest.length)
 print('New', next_gen.fittest.length)
 lp.print_stats()
 
-"""
 # Test Tour Class
 my_tour = Tour()
 print(my_tour.tour)
@@ -588,12 +658,12 @@ print(sum(my_tour_pop.get_pool()))
 """
 
 
-# Test GA
-initial_length, my_tour = run_GA(1000, 35)
+# Simulate TSP using Genetic Algorithm
+initial_length, ga_tour = run_GA(num_of_generations, population_size)
+print('Initial Tour Length:', initial_length)
 
-print('Initial best tour:', initial_length)
-print('Best tour found:', my_tour.length)
-print('Tour:', my_tour.tour)
+tour = ga_tour.tour
+tour_length = ga_tour.length
 
 
 ############
