@@ -9,7 +9,6 @@
 # THE STANDARD MODULES, TAKE A LOOK IN 'validate_before_handin.py'.
 ############
 
-from line_profiler import LineProfiler
 import os
 import sys
 import time
@@ -164,7 +163,7 @@ def read_in_algorithm_codes_and_tariffs(alg_codes_file):
 ############
 
 
-input_file = "AISearchfile535.txt"
+input_file = "AISearchfile058.txt"
 
 ############
 # PLEASE SCROLL DOWN UNTIL THE NEXT BLOCK OF CAPITALIZED COMMENTS.
@@ -434,7 +433,7 @@ def run_SA(temp_start, temp_end, alpha):
     """
     Run the simulated annealing algorithm using the appropriate class methods above.
 
-    The parameters (temperature) and the number of iterations can be modified to produce optimal results
+    The parameters (temperature and alpha) can be modified to produce optimal results
     for the TSP tour generated.
     """
 
