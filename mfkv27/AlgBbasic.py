@@ -438,31 +438,11 @@ def run_SA(temp_start, temp_end, alpha):
     return initial_best_tour, current
 
 
-"""
-Test our methods...
-
-
-# Test get_successor
-my_tour = Tour()
-temp = 12345
-succ = SA().get_successor(my_tour, temp)
-print('Initial tour', my_tour.tour)
-print('Successor tour:', succ.tour)
-print('delta', succ.length - my_tour.length)
-
-# Test running SA
-t0 = 100000000
-tmin = 0.1
-cf = 0.95
-initial_length, best_tour = run_SA(t0, tmin, cf)
-print("Initial best length", initial_length)
-print("Best tour length", best_tour.length)
-"""
-
 # Simulate TSP using Simulated Annealing
 initial_length, sa_tour = run_SA(t0, tmin, alpha)
-print('Initial Tour Length:', initial_length)
-print('Best Tour Length:', sa_tour.length)
+
+tour = sa_tour.tour
+tour_length = sa_tour.length
 
 ############
 # YOUR CODE SHOULD NOW BE COMPLETE AND WHEN EXECUTION OF THIS PROGRAM 'skeleton.py'
