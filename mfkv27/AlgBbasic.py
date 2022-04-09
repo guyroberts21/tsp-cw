@@ -362,6 +362,8 @@ class Tour():
 class SA():
     def successor(self, T):
         '''
+        ==== SIMPLE SWAP METHOD ==== 
+
         Returns a "successor" tour by swapping two randomly chosen cities
         '''
         # choose two random positions

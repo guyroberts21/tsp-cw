@@ -1,24 +1,24 @@
 #####
-##### THIS PROGRAM VALIDATES THE PROGRAMS, TOUR FILES AND PROFORMA BEFORE YOU HAND IT IN.
-##### YOU SHOULD RUN THIS PROGRAM BEFORE HAND-IN.
-##### YOU NEED A FOLDER IN WHICH THERE IS:
-#####    - THIS PROGRAM
-#####    - A FOLDER NAMED WHATEVER YOUR USER-NAME IS, E.G., "abcd12" WITH ALL YOUR FILES IN
-#####    - A FOLDER NAMED "city-files" THAT HOLDS ALL THE CITY FILES
-#####    - THE SUPPLIED TEXT FILE "alg_codes_and_tariffs.txt" CONTAINING DATA RELATING TO THE
-#####      ALGORITHM CODES AND TARIFFS.
-#####    - AN ORIGINAL UNTOUCHED COPY OF 'skeleton.py' (TO CHECK AGAINST - DOWNLOAD THIS COPY FROM
-#####                                                   ULTRA JUST BEFORE YOU INTEND TO VALIDATE)
-#####    
-##### YOU SHOULD SCROLL DOWN TO THE NEXT BLOCK OF CAPITILIZED COMMENTS.
-##### DO NOT TOUCH THE CODE IN BETWEEN! I REPEAT: DO NOT TOUCH THE CODE IN BETWEEN!
+# THIS PROGRAM VALIDATES THE PROGRAMS, TOUR FILES AND PROFORMA BEFORE YOU HAND IT IN.
+# YOU SHOULD RUN THIS PROGRAM BEFORE HAND-IN.
+# YOU NEED A FOLDER IN WHICH THERE IS:
+# - THIS PROGRAM
+# - A FOLDER NAMED WHATEVER YOUR USER-NAME IS, E.G., "abcd12" WITH ALL YOUR FILES IN
+# - A FOLDER NAMED "city-files" THAT HOLDS ALL THE CITY FILES
+# - THE SUPPLIED TEXT FILE "alg_codes_and_tariffs.txt" CONTAINING DATA RELATING TO THE
+# ALGORITHM CODES AND TARIFFS.
+# - AN ORIGINAL UNTOUCHED COPY OF 'skeleton.py' (TO CHECK AGAINST - DOWNLOAD THIS COPY FROM
+# ULTRA JUST BEFORE YOU INTEND TO VALIDATE)
+#####
+# YOU SHOULD SCROLL DOWN TO THE NEXT BLOCK OF CAPITILIZED COMMENTS.
+# DO NOT TOUCH THE CODE IN BETWEEN! I REPEAT: DO NOT TOUCH THE CODE IN BETWEEN!
 #####
 
 import os
 import sys
 
 flag_dictionary = {
-    "validate_format_of_city_files" : {
+    "validate_format_of_city_files": {
         0: "all city files are properly formatted and these files have been registered",
         1: "*** fatal error: the folder of city files does not exist",
         2: "*** fatal error: the 'folder' of city files exists but is not a folder",
@@ -29,64 +29,64 @@ flag_dictionary = {
         7: "*** fatal error: there are too few cities in a city file",
         8: "*** fatal error: the 'NOTE =' tag is missing in a city file",
         9: "*** fatal error: the number of city-to-city distances is incorrect in a city file"},
-    "between_tag_pair" : {
-        0 : "tags have been found",
-        1 : "*** fatal error: a required tag is the empty tag",
-        2 : "*** fatal error: a required tag does not exist",
-        3 : "*** fatal error: the second tag after a found first tag does not exist"},
-    "up_to_next_comma" : {
-        0 : "a following comma has been found",
-        1 : "*** fatal error : a following comma does not exist"},
-    "collect_data_from_program_file" : {
-        0 : "the data has been read correctly from the program file",
-        1 : "*** error: the program file does not exist",
-        2 : "*** error: the user-name or the algorithm code has not been correctly formatted",
-        3 : "*** error: you haven't supplied an original untouched copy of 'skeleton.py' to check against"},
-    "validate_a_program" : {
-        0 : "the program file has successfully been validated",
-        1 : "*** error: the definitive user-name and the program file user-name do not match",
-        2 : "*** error: the algorithm code in the program file is illegal",
-        3 : "*** error: an illegal module has been imported"},
-    "collect_data_from_tour_file" : {
-        0 : "the data has been read correctly from the tour file",
-        1 : "*** error: the tour file does not exist",
-        2 : "*** error: the tour file is not correctly formatted",
-        3 : "*** error: the tour in the tour file does not consist of the stated number of cities"},
-    "validate_a_tour" : {
-        0 : "the tour file has successfully been validated against the appropriate city file",
-        1 : "*** error: the definitive user-name and the user-name in the tour file do not match",
-        2 : "*** error: the algorithm code in the tour file is illegal",
-        3 : "*** error: corresponding progam cluster is invalid",
-        4 : "*** error: there is a mis-match involving algorithm codes",
-        5 : "*** error: the name of the city file in the tour file is illegal",
-        6 : "*** error: numbers of cities in the tour file and the city file dont match",
-        7 : "*** error: the tour does not contain the claimed number of cities",
-        8 : "*** error: there are duplicate cities in the tour",
-        9 : "*** error: cities in the tour are mis-named",
+    "between_tag_pair": {
+        0: "tags have been found",
+        1: "*** fatal error: a required tag is the empty tag",
+        2: "*** fatal error: a required tag does not exist",
+        3: "*** fatal error: the second tag after a found first tag does not exist"},
+    "up_to_next_comma": {
+        0: "a following comma has been found",
+        1: "*** fatal error : a following comma does not exist"},
+    "collect_data_from_program_file": {
+        0: "the data has been read correctly from the program file",
+        1: "*** error: the program file does not exist",
+        2: "*** error: the user-name or the algorithm code has not been correctly formatted",
+        3: "*** error: you haven't supplied an original untouched copy of 'skeleton.py' to check against"},
+    "validate_a_program": {
+        0: "the program file has successfully been validated",
+        1: "*** error: the definitive user-name and the program file user-name do not match",
+        2: "*** error: the algorithm code in the program file is illegal",
+        3: "*** error: an illegal module has been imported"},
+    "collect_data_from_tour_file": {
+        0: "the data has been read correctly from the tour file",
+        1: "*** error: the tour file does not exist",
+        2: "*** error: the tour file is not correctly formatted",
+        3: "*** error: the tour in the tour file does not consist of the stated number of cities"},
+    "validate_a_tour": {
+        0: "the tour file has successfully been validated against the appropriate city file",
+        1: "*** error: the definitive user-name and the user-name in the tour file do not match",
+        2: "*** error: the algorithm code in the tour file is illegal",
+        3: "*** error: corresponding progam cluster is invalid",
+        4: "*** error: there is a mis-match involving algorithm codes",
+        5: "*** error: the name of the city file in the tour file is illegal",
+        6: "*** error: numbers of cities in the tour file and the city file dont match",
+        7: "*** error: the tour does not contain the claimed number of cities",
+        8: "*** error: there are duplicate cities in the tour",
+        9: "*** error: cities in the tour are mis-named",
         10: "*** error: the tour doesn't have the length claimed"},
-    "run_program_on_city_file" : {
-        0 : "the program terminated on the city file",
-        1 : "*** error: the program timed out on the city file"},
-    "rename_hidden_city_file" : {
-        0 : "the hidden-city file has been renamed",
-        1 : "*** error: the hidden-city file does not exist",
-        2 : "*** error: the hidden-city file is not a file"},
-    "validating student programs" : {
-        0 : "the student's programs validate",
-        1 : "*** error: the algorithm codes in the two programs mis-match",
-        2 : "*** error: two program clusters have the same algorithm code"},
-    "executing student programs" : {
-        0 : "the execution of the program went according to plan",
-        1 : "*** error: the program is missing",
-        2 : "*** error: there are illegal Python modules",
-        3 : "*** error: something went wrong in building the hidden-city tour file"}
+    "run_program_on_city_file": {
+        0: "the program terminated on the city file",
+        1: "*** error: the program timed out on the city file"},
+    "rename_hidden_city_file": {
+        0: "the hidden-city file has been renamed",
+        1: "*** error: the hidden-city file does not exist",
+        2: "*** error: the hidden-city file is not a file"},
+    "validating student programs": {
+        0: "the student's programs validate",
+        1: "*** error: the algorithm codes in the two programs mis-match",
+        2: "*** error: two program clusters have the same algorithm code"},
+    "executing student programs": {
+        0: "the execution of the program went according to plan",
+        1: "*** error: the program is missing",
+        2: "*** error: there are illegal Python modules",
+        3: "*** error: something went wrong in building the hidden-city tour file"}
 }
 
 legal_modules = ['abc', 'aifc', 'argparse', 'array', 'ast', 'asynchat', 'asyncio', 'asyncore', 'atexit', 'audioop',
                  'base64', 'bdb', 'binascii', 'binhex', 'bisect', 'builtins', 'bz2',
                  'calendar', 'cgi', 'cgitb', 'chunk', 'cmath', 'cmd', 'code', 'codecs', 'codeop', 'collections', 'colorsys',
-                     'compileall', 'concurrent', 'configparser', 'contextlib', 'contextvars', 'copy', 'copyreg', 'CProfile',
-                     'crypt', 'csv', 'ctypes', 'curses',
+                 'compileall', 'concurrent', 'configparser', 'contextlib', 'contextvars', 'copy', 'copyreg', 'CProfile',
+                 'crypt', 'csv', 'ctypes', 'curses',
                  'dataclasses', 'datetime', 'dbm', 'decimal', 'difflib', 'dis', 'distutils', 'doctest', 'dummy_threading',
                  'email', 'encodings', 'ensurepip', 'enum', 'errno',
                  'faulthandler', 'fcntl', 'filecmp', 'fileinput', 'fnmatch', 'formatter', 'fractions', 'ftplib', 'functools',
@@ -100,14 +100,14 @@ legal_modules = ['abc', 'aifc', 'argparse', 'array', 'ast', 'asynchat', 'asyncio
                  'netrc', 'nis', 'nntplib', 'numbers',
                  'operator', 'optparse', 'os', 'ossaudiodev',
                  'parser', 'pathlib', 'pdb', 'pickle', 'pickletools', 'pipes', 'pkgutil', 'platform', 'plistlib', 'poplib', 'posix',
-                     'pprint', 'profile', 'pstats', 'pty', 'pwd', 'py_compile', 'pyclbr', 'pydoc',
+                 'pprint', 'profile', 'pstats', 'pty', 'pwd', 'py_compile', 'pyclbr', 'pydoc',
                  'queue', 'quopri',
                  'random', 're', 'readline', 'reprlib', 'resource', 'rlcompleter', 'runpy',
                  'sched', 'secrets', 'select', 'selectors', 'shelve', 'shlex', 'shutil', 'signal', 'site', 'smtpd', 'smtplib', 'sndhdr',
-                     'socket', 'socketserver', 'spwd', 'sqlite3', 'ssl', 'stat', 'statistics', 'string', 'stringprep', 'struct', 'subprocess',
-                     'sunau', 'symbol', 'symtable', 'sys', 'sysconfig', 'syslog',
+                 'socket', 'socketserver', 'spwd', 'sqlite3', 'ssl', 'stat', 'statistics', 'string', 'stringprep', 'struct', 'subprocess',
+                 'sunau', 'symbol', 'symtable', 'sys', 'sysconfig', 'syslog',
                  'tabnanny', 'tarfile', 'telnetlib', 'tempfile', 'termios', 'test', 'textwrap', 'threading', 'time', 'timeit', 'tkinter',
-                     'token', 'tokenize', 'trace', 'traceback', 'tracemalloc', 'tty', 'turtle', 'turtledemo', 'types', 'typing',
+                 'token', 'tokenize', 'trace', 'traceback', 'tracemalloc', 'tty', 'turtle', 'turtledemo', 'types', 'typing',
                  'unicodedata', 'unittest', 'urllib', 'uu', 'uuid',
                  'venv',
                  'warnings', 'wave', 'weakref', 'webbrowser', 'winreg', 'winsound', 'wsgiref',
@@ -115,22 +115,24 @@ legal_modules = ['abc', 'aifc', 'argparse', 'array', 'ast', 'asynchat', 'asyncio
                  'zipapp', 'zipfile', 'zipimport', 'zlib']
 
 #####
-##### ALL YOU HAVE TO DO IS SET THE VARIABLE "user_name" EQUAL TO YOUR USER-NAME,
-##### E.G., user_name = "abcd12"
+# ALL YOU HAVE TO DO IS SET THE VARIABLE "user_name" EQUAL TO YOUR USER-NAME,
+# E.G., user_name = "abcd12"
 #####
-##### DO NOT TOUCH ANYTHING ELSE!
+# DO NOT TOUCH ANYTHING ELSE!
 #####
-##### WHEN YOU RUN THIS PROGRAM, YOU WILL GET A FEEDBACK REPORT IN THE FILE "abcd12_feedback.txt"
-##### (DEPENDING ON WHAT YOUR USER-NAME IS).
+# WHEN YOU RUN THIS PROGRAM, YOU WILL GET A FEEDBACK REPORT IN THE FILE "abcd12_feedback.txt"
+# (DEPENDING ON WHAT YOUR USER-NAME IS).
 #####
 
-user_name = "abcd12"
+user_name = "mfkv27"
 
 #####
-    
-programs_to_submit = [["AlgAbasic.py", "AlgAenhanced.py"], ["AlgBbasic.py", "AlgBenhanced.py"]]
+
+programs_to_submit = [["AlgAbasic.py", "AlgAenhanced.py"], [
+    "AlgBbasic.py", "AlgBenhanced.py"]]
 programs_prefix = ["AlgA", "AlgB"]
-prefix_dictionary = {"AlgA" : ["AlgAbasic.py", "AlgAenhanced.py"], "AlgB" : ["AlgBbasic.py", "AlgBenhanced.py"]}
+prefix_dictionary = {"AlgA": ["AlgAbasic.py", "AlgAenhanced.py"], "AlgB": [
+    "AlgBbasic.py", "AlgBenhanced.py"]}
 tour_files_to_submit = [["AlgA_AISearchfile012.txt", "AlgA_AISearchfile017.txt", "AlgA_AISearchfile021.txt", "AlgA_AISearchfile026.txt", "AlgA_AISearchfile042.txt",
                          "AlgA_AISearchfile048.txt", "AlgA_AISearchfile058.txt", "AlgA_AISearchfile175.txt", "AlgA_AISearchfile180.txt", "AlgA_AISearchfile535.txt"],
                         ["AlgB_AISearchfile012.txt", "AlgB_AISearchfile017.txt", "AlgB_AISearchfile021.txt", "AlgB_AISearchfile026.txt", "AlgB_AISearchfile042.txt",
@@ -138,6 +140,7 @@ tour_files_to_submit = [["AlgA_AISearchfile012.txt", "AlgA_AISearchfile017.txt",
 additional_items_to_submit = ["AISearchProforma.pdf"]
 city_file_folder = "city-files"
 alg_codes_file = "alg_codes_and_tariffs.txt"
+
 
 def integerize(the_string):
     length = len(the_string)
@@ -147,6 +150,7 @@ def integerize(the_string):
             stripped_string = stripped_string + the_string[i]
     resulting_int = int(stripped_string)
     return resulting_int
+
 
 def between_tag_pair(the_string, tag_pair, start_location):
     batch = "between_tag_pair"
@@ -164,6 +168,7 @@ def between_tag_pair(the_string, tag_pair, start_location):
         return "", -1, flag
     sandwich = the_string[start_first + len(tag_pair[0]):start_second]
     return sandwich, start_second + 1, flag
+
 
 def strings_between_tag_pairs(the_string, tag_pairs, start_location):
     batch = "strings_between_tag_pairs"
@@ -184,6 +189,7 @@ def strings_between_tag_pairs(the_string, tag_pairs, start_location):
             start_location = -1
     return values, start_location, flag
 
+
 def remove_all_spaces(the_string):
     length = len(the_string)
     new_string = ""
@@ -191,6 +197,7 @@ def remove_all_spaces(the_string):
         if the_string[i] != " ":
             new_string = new_string + the_string[i]
     return new_string
+
 
 def read_file_into_string(input_file, ord_range):
     the_file = open(input_file, 'r')
@@ -208,6 +215,7 @@ def read_file_into_string(input_file, ord_range):
         current_char = the_file.read(1)
     the_file.close()
     return file_string
+
 
 def get_the_modules_imported(program_file):
     ord_range = [[0, 127]]
@@ -227,7 +235,8 @@ def get_the_modules_imported(program_file):
         if found != -1:
             location = program_file_string.find("\n", found + 7)
             if location != -1:
-                import_sandwiches.append(program_file_string[found + 7:location])
+                import_sandwiches.append(
+                    program_file_string[found + 7:location])
             else:
                 import_sandwiches.append(program_file_string[found + 7:])
                 found = -1
@@ -250,7 +259,7 @@ def get_the_modules_imported(program_file):
                 from_sandwiches.append(program_file_string[found + 5:location])
             else:
                 from_sandwiches.append(program_file_string[found + 5:])
-                found = -1       
+                found = -1
     the_imports = []
     for item in import_sandwiches:
         found, location = 0, 0
@@ -259,20 +268,22 @@ def get_the_modules_imported(program_file):
             if found != -1:
                 as_found = item.find(" as ", location, found)
                 if as_found != -1:
-                    the_imports.append(remove_all_spaces(item[location:as_found]))
+                    the_imports.append(
+                        remove_all_spaces(item[location:as_found]))
                 else:
                     the_imports.append(remove_all_spaces(item[location:found]))
                 location = found + 1
             else:
                 as_found = item.find(" as ", location)
                 if as_found != -1:
-                    the_imports.append(remove_all_spaces(item[location:as_found]))
+                    the_imports.append(
+                        remove_all_spaces(item[location:as_found]))
                 else:
                     the_imports.append(remove_all_spaces(item[location:]))
     for item in from_sandwiches:
         found = item.find("import")
         if found != -1:
-            the_imports.append(remove_all_spaces(item[0:found]))      
+            the_imports.append(remove_all_spaces(item[0:found]))
     length = len(the_imports)
     for i in range(0, length):
         found = the_imports[i].find(".")
@@ -280,42 +291,45 @@ def get_the_modules_imported(program_file):
             the_imports[i] = the_imports[i][0:found]
 
     the_imports = list(set(the_imports))
-    the_imports.sort()    
+    the_imports.sort()
     return the_imports
+
 
 def partition_a_program_string(program_string):
     start_program = []
     end_program = []
-    start_program.append(program_string.find("############\n############ NOW PLEASE SCROLL DOWN"))
-    end_program.append(program_string.find("############ THE CITY FILE IS IN THE FOLDER 'city-files'.\n############", \
-                                                              start_program[0]))
+    start_program.append(program_string.find(
+        "############\n############ NOW PLEASE SCROLL DOWN"))
+    end_program.append(program_string.find("############ THE CITY FILE IS IN THE FOLDER 'city-files'.\n############",
+                                           start_program[0]))
     end_program[0] = end_program[0] + 69
-    start_program.append(program_string.find("############ PLEASE SCROLL DOWN UNTIL THE NEXT BLOCK OF CAPITALIZED COMMENTS.", \
-                                                                 end_program[0]))
-    end_program.append(program_string.find("############ USER-NAME, E.G., \"abcd12\"\n############", \
-                                                               start_program[1]))
+    start_program.append(program_string.find("############ PLEASE SCROLL DOWN UNTIL THE NEXT BLOCK OF CAPITALIZED COMMENTS.",
+                                             end_program[0]))
+    end_program.append(program_string.find("############ USER-NAME, E.G., \"abcd12\"\n############",
+                                           start_program[1]))
     end_program[1] = end_program[1] + 50
-    start_program.append(program_string.find("############\n############ YOU CAN SUPPLY, IF YOU WANT, YOUR FULL NAME.", \
-                                                                end_program[1]))
-    end_program.append(program_string.find("############ ARE SET AT SOMETHING).\n############", \
-                                                              start_program[2]))
+    start_program.append(program_string.find("############\n############ YOU CAN SUPPLY, IF YOU WANT, YOUR FULL NAME.",
+                                             end_program[1]))
+    end_program.append(program_string.find("############ ARE SET AT SOMETHING).\n############",
+                                           start_program[2]))
     end_program[2] = end_program[2] + 47
-    start_program.append(program_string.find("############\n############ YOU NEED TO SUPPLY THE ALGORITHM CODE", \
-                                                                 end_program[2]))
-    end_program.append(program_string.find("'alg_codes_and_tariffs.txt' (READ THIS FILE TO SEE THE CODES).\n############", \
-                                                               start_program[3]))
+    start_program.append(program_string.find("############\n############ YOU NEED TO SUPPLY THE ALGORITHM CODE",
+                                             end_program[2]))
+    end_program.append(program_string.find("'alg_codes_and_tariffs.txt' (READ THIS FILE TO SEE THE CODES).\n############",
+                                           start_program[3]))
     end_program[3] = end_program[3] + 74
-    start_program.append(program_string.find("############\n############ DO NOT TOUCH OR ALTER THE CODE BELOW!", \
-                                                                end_program[3]))
-    end_program.append(program_string.find("############ YOUR TOUR THAT YOU MIGHT BE INTERESTED IN LATER.\n############", \
-                                                              start_program[4]))
+    start_program.append(program_string.find("############\n############ DO NOT TOUCH OR ALTER THE CODE BELOW!",
+                                             end_program[3]))
+    end_program.append(program_string.find("############ YOUR TOUR THAT YOU MIGHT BE INTERESTED IN LATER.\n############",
+                                           start_program[4]))
     end_program[4] = end_program[4] + 73
-    start_program.append(program_string.find("############\n############ YOUR CODE SHOULD NOW BE COMPLETE", \
-                                                                end_program[4]))
-    end_program.append(program_string.find("the tour file:\n   \" + output_file_name + \".\")", \
-                                                              start_program[5]))
+    start_program.append(program_string.find("############\n############ YOUR CODE SHOULD NOW BE COMPLETE",
+                                             end_program[4]))
+    end_program.append(program_string.find("the tour file:\n   \" + output_file_name + \".\")",
+                                           start_program[5]))
     end_program[5] = end_program[5] + 44
     return start_program, end_program
+
 
 def has_it_been_touched(program_file):
     touch_flag = False
@@ -323,19 +337,22 @@ def has_it_been_touched(program_file):
     if not os.path.isfile("../skeleton.py"):
         skeleton_flag = True
         return touch_flag, skeleton_flag
-    
+
     ord_range = [[0, 127]]
     skeleton_file_string = read_file_into_string("../skeleton.py", ord_range)
     program_file_string = read_file_into_string(program_file, ord_range)
-    
-    start_skeleton, end_skeleton = partition_a_program_string(skeleton_file_string)
-    start_program, end_program = partition_a_program_string(program_file_string)
+
+    start_skeleton, end_skeleton = partition_a_program_string(
+        skeleton_file_string)
+    start_program, end_program = partition_a_program_string(
+        program_file_string)
 
     for i in range(0, 6):
-        if skeleton_file_string[start_skeleton[i] : end_skeleton[i]] != program_file_string[start_program[i] : end_program[i]]:
+        if skeleton_file_string[start_skeleton[i]: end_skeleton[i]] != program_file_string[start_program[i]: end_program[i]]:
             touch_flag = True
     return touch_flag, skeleton_flag
-    
+
+
 def collect_data_from_program_file(program_file, list_of_programs):
     batch = "collect_data_from_program_file"
     flag = [(batch, 0)]
@@ -351,7 +368,8 @@ def collect_data_from_program_file(program_file, list_of_programs):
     program_file_string = remove_all_spaces(program_file_string)
     tag_pairs = [["my_user_name=\"", "\""], ["algorithm_code=\"", "\""]]
     start_location = 0
-    values, new_location, sub_flag = strings_between_tag_pairs(program_file_string, tag_pairs, start_location)
+    values, new_location, sub_flag = strings_between_tag_pairs(
+        program_file_string, tag_pairs, start_location)
     if sub_flag[1] > 0:
         flag.append((batch, 2))
         return program_file_data, flag
@@ -359,10 +377,12 @@ def collect_data_from_program_file(program_file, list_of_programs):
     program_file_data[2] = values[1]
     program_file_data[3] = [get_the_modules_imported(program_file), []]
     touch_flag, skeleton_flag = has_it_been_touched(program_file)
-    program_file_data[4] = touch_flag       # if the skeleton code has been amended then this is only flagged to the student
+    # if the skeleton code has been amended then this is only flagged to the student
+    program_file_data[4] = touch_flag
     if skeleton_flag == True:
         flag.append((batch, 3))
     return program_file_data, flag
+
 
 def validate_a_program(user_name, program_file_data, code_dictionary, legal_modules):
     batch = "validate_a_program"
@@ -381,6 +401,7 @@ def validate_a_program(user_name, program_file_data, code_dictionary, legal_modu
         flag.append((batch, 3))
     return program_file_data, flag
 
+
 def up_to_next_comma(the_string, start_location):
     batch = "up_to_next_comma"
     flag = (batch, 0)
@@ -389,7 +410,8 @@ def up_to_next_comma(the_string, start_location):
         flag = (batch, 1)
         return "", -1, flag
     sandwich = the_string[start_location:found_comma]
-    return sandwich, found_comma + 1, flag 
+    return sandwich, found_comma + 1, flag
+
 
 def collect_data_from_tour_file(tour_file, list_of_tours):
     batch = "collect_data_from_tour_file"
@@ -407,7 +429,8 @@ def collect_data_from_tour_file(tour_file, list_of_tours):
     tag_pairs = [["USER=", ","], ["ALGORITHMCODE=", ","], ["NAMEOFCITY-FILE=", ","],
                  ["SIZE=", ","], ["TOURLENGTH=", ","]]
     start_location = 0
-    values, new_location, sub_flag = strings_between_tag_pairs(tour_file_string, tag_pairs, start_location)
+    values, new_location, sub_flag = strings_between_tag_pairs(
+        tour_file_string, tag_pairs, start_location)
     if sub_flag[1] > 0:
         flag.append((batch, 2))
         return tour_file_data, flag
@@ -425,7 +448,8 @@ def collect_data_from_tour_file(tour_file, list_of_tours):
         return tour_file_data, flag
     ok, count, the_tour = True, 0, []
     while (new_location < start_note_tag) and (ok == True):
-        sandwich, new_location, sub_flag = up_to_next_comma(tour_file_string, new_location)
+        sandwich, new_location, sub_flag = up_to_next_comma(
+            tour_file_string, new_location)
         if (sub_flag[1] > 0) or (new_location > start_note_tag):
             flag.append((batch, 2))
             ok = False
@@ -453,12 +477,12 @@ def collect_data_from_tour_file(tour_file, list_of_tours):
                 after_value = the_tour[zero_location + 1]
             else:
                 after_value = the_tour[0]
-            if after_value >= before_value: 
+            if after_value >= before_value:
                 write_right = True
             else:
                 write_right = False
             copy_the_tour = the_tour[:]
-            for i in range(0,counted_tour_cities):
+            for i in range(0, counted_tour_cities):
                 if (zero_location + i) >= counted_tour_cities and write_right == True:
                     j = zero_location + i - counted_tour_cities
                 elif (zero_location + i) < counted_tour_cities and write_right == True:
@@ -470,6 +494,7 @@ def collect_data_from_tour_file(tour_file, list_of_tours):
                 the_tour[i] = copy_the_tour[j]
     tour_file_data[6] = the_tour
     return tour_file_data, flag
+
 
 def validate_a_tour(user_name, tour_file, tour_file_data, city_dictionary, code_dictionary,
                     programs_to_submit, prefix_dictionary, student_record):
@@ -510,25 +535,29 @@ def validate_a_tour(user_name, tour_file, tour_file_data, city_dictionary, code_
                 duplicate = True
     if duplicate == True:
         flag.append((batch, 8))
-    if bad_city  == True:
+    if bad_city == True:
         flag.append((batch, 9))
     if duplicate == False and bad_city == False:
         check_tour_length = 0
         for i in range(tour_file_data[4] - 1):
             check_tour_length = check_tour_length + \
-                        city_dictionary[tour_file_data[3]][1][tour_file_data[6][i]][tour_file_data[6][i + 1]]
+                city_dictionary[tour_file_data[3]
+                                ][1][tour_file_data[6][i]][tour_file_data[6][i + 1]]
         check_tour_length = check_tour_length + \
-                        city_dictionary[tour_file_data[3]][1][tour_file_data[6][tour_file_data[4] - 1]][tour_file_data[6][0]]
+            city_dictionary[tour_file_data[3]][1][tour_file_data[6]
+                                                  [tour_file_data[4] - 1]][tour_file_data[6][0]]
         if check_tour_length != tour_file_data[5]:
             flag.append((batch, 10))
         tour_data[7] = check_tour_length
     return tour_data, flag
 
+
 def non_control_ord_range():
     ord_range = []
-    first_range = [32,127]
+    first_range = [32, 127]
     ord_range.append(first_range)
     return ord_range
+
 
 def read_in_algorithm_codes_and_tariffs(alg_codes_file):
     batch = "read_in_algorithm_codes_and_tariffs"
@@ -544,7 +573,8 @@ def read_in_algorithm_codes_and_tariffs(alg_codes_file):
     EOF = False
     code_list = []
     while EOF == False:
-        sandwich, new_location, sub_flag = up_to_next_comma(file_string, start_location)
+        sandwich, new_location, sub_flag = up_to_next_comma(
+            file_string, start_location)
         if sub_flag[1] > 0:
             EOF = True
             code_list.append(file_string[start_location:])
@@ -566,11 +596,13 @@ def read_in_algorithm_codes_and_tariffs(alg_codes_file):
             elif code_list[3 * i + 1] == "":
                 flag = (batch, 5)
             elif integerize(code_list[3 * i + 2]) < 0 or integerize(code_list[3 * i + 2]) > 10:
-                flag =(batch, 6)
+                flag = (batch, 6)
             else:
                 code_dictionary[code_list[3 * i]] = code_list[3 * i + 1]
-                tariff_dictionary[code_list[3 * i]] = integerize(code_list[3 * i + 2])
+                tariff_dictionary[code_list[3 * i]
+                                  ] = integerize(code_list[3 * i + 2])
     return code_dictionary, tariff_dictionary, flag
+
 
 def build_student_feedback_file(user_name, student_record, programs_to_submit, programs_prefix, tour_files_to_submit,
                                 additional_items_to_submit, code_dictionary, tariff_dictionary, flag_dictionary):
@@ -595,7 +627,7 @@ def build_student_feedback_file(user_name, student_record, programs_to_submit, p
     f.write("\n")
     f.write("#####  Program submission\n")
     num_clusters = len(programs_to_submit)
-    for i in range(0,num_clusters):
+    for i in range(0, num_clusters):
         f.write("#####   * program cluster " + programs_prefix[i] + ":\n")
         for item in programs_to_submit[i]:
             f.write("#####      - " + item + ": ")
@@ -607,7 +639,8 @@ def build_student_feedback_file(user_name, student_record, programs_to_submit, p
                 f.write("there were validation errors\n")
                 length = len(student_record[item][1])
                 for j in range(1, length):
-                    f.write("#####         " + flag_dictionary[student_record[item][1][j][0]][student_record[item][1][j][1]] + "\n")
+                    f.write(
+                        "#####         " + flag_dictionary[student_record[item][1][j][0]][student_record[item][1][j][1]] + "\n")
                     if student_record[item][1][j][0] == "validate_a_program" and student_record[item][1][j][1] == 3:
                         f.write("#####             bad modules used:")
                         length_bad_codes = len(student_record[item][0][3][1])
@@ -618,9 +651,10 @@ def build_student_feedback_file(user_name, student_record, programs_to_submit, p
                             else:
                                 f.write("\n")
             if student_record[item][0][4] == True:
-                f.write("                           *** warning: you appear to have amended the core skeleton code even though I told you not to!\n")
-                f.write("                                        consequently, your code might not run for me - " \
-                                                                    "I would fix this if I were you\n")
+                f.write(
+                    "                           *** warning: you appear to have amended the core skeleton code even though I told you not to!\n")
+                f.write("                                        consequently, your code might not run for me - "
+                        "I would fix this if I were you\n")
         if student_record[programs_to_submit[i][0]][2] == "N":
             f.write("#####     *** MAJOR ERROR: THIS PROGRAM CLUSTER IS INVALID!\n")
     f.write("\n")
@@ -631,7 +665,7 @@ def build_student_feedback_file(user_name, student_record, programs_to_submit, p
     f.write("\n")
     f.write("#####  Tour file submission\n")
     num_batches = len(tour_files_to_submit)
-    for i in range(0,num_batches):
+    for i in range(0, num_batches):
         f.write("#####   * program cluster " + programs_prefix[i] + ":\n")
         for item in tour_files_to_submit[i]:
             f.write("#####      - " + item + ": ")
@@ -642,9 +676,11 @@ def build_student_feedback_file(user_name, student_record, programs_to_submit, p
                 f.write("there were validation errors:\n")
                 length = len(student_record[item][1])
                 for j in range(1, length):
-                    f.write("#####        " + flag_dictionary[student_record[item][1][j][0]][student_record[item][1][j][1]] + "\n")
+                    f.write(
+                        "#####        " + flag_dictionary[student_record[item][1][j][0]][student_record[item][1][j][1]] + "\n")
                 if student_record[item][0][5] == student_record[item][0][7] and student_record[item][0][7] > 0:
-                    f.write("#####        (as it happens, you have a legal tour of length " + str(student_record[item][0][7]) + ")\n")
+                    f.write("#####        (as it happens, you have a legal tour of length " +
+                            str(student_record[item][0][7]) + ")\n")
     f.write("\n")
     f.write("The next part of this feedback simply states whether or not the proforma was submitted. There is no penalty for not submitting the proforma but\n")
     f.write("no enhancement marks will be awarded without a proforma.\n")
@@ -660,6 +696,7 @@ def build_student_feedback_file(user_name, student_record, programs_to_submit, p
     f.write("\n")
     f.close()
     return
+
 
 def build_distance_matrix(number_of_cities, distances, city_format):
     dist_matrix = []
@@ -696,6 +733,7 @@ def build_distance_matrix(number_of_cities, distances, city_format):
                     dist_matrix[i][j] = dist_matrix[j][i]
     return dist_matrix
 
+
 def convert_to_list_of_int(the_string):
     list_of_integers = []
     location = 0
@@ -705,9 +743,11 @@ def convert_to_list_of_int(the_string):
         if found_comma == -1:
             location = length
         else:
-            list_of_integers.append(integerize(the_string[location:found_comma]))
+            list_of_integers.append(integerize(
+                the_string[location:found_comma]))
             location = found_comma + 1
     return list_of_integers
+
 
 def validate_format_of_city_files(the_folder):
     batch = "validate_format_of_city_files"
@@ -749,7 +789,8 @@ def validate_format_of_city_files(the_folder):
         os.chdir("..")
         tag_pair = ["SIZE=", ","]
         start_location = 0
-        sandwich, new_location, flag = between_tag_pair(city_file_string, tag_pair, start_location)
+        sandwich, new_location, flag = between_tag_pair(
+            city_file_string, tag_pair, start_location)
         if flag[1] > 0:
             flag = (batch, 6)
         if flag[1] == 0:
@@ -762,7 +803,8 @@ def validate_format_of_city_files(the_folder):
             if start_note_tag == -1:
                 flag = (batch, 8)
         if flag[1] == 0:
-            distances = convert_to_list_of_int(city_file_string[new_location:start_note_tag])
+            distances = convert_to_list_of_int(
+                city_file_string[new_location:start_note_tag])
             counted_distances = len(distances)
             if counted_distances == number_of_cities * number_of_cities:
                 city_format = "full"
@@ -773,19 +815,23 @@ def validate_format_of_city_files(the_folder):
             else:
                 flag = (batch, 10)
         if flag[1] == 0:
-            dist_matrix = build_distance_matrix(number_of_cities, distances, city_format)
+            dist_matrix = build_distance_matrix(
+                number_of_cities, distances, city_format)
         city_dictionary[city_file] = [number_of_cities, dist_matrix]
     return city_file_list, city_dictionary, flag
 
 ##### main program #####
 
-city_file_list, city_dictionary, flag = validate_format_of_city_files(city_file_folder)
+
+city_file_list, city_dictionary, flag = validate_format_of_city_files(
+    city_file_folder)
 
 if flag[1] != 0:
     print(flag_dictionary[flag[0]][flag[1]])
     sys.exit()
 
-code_dictionary, tariff_dictionary, flag = read_in_algorithm_codes_and_tariffs(alg_codes_file)
+code_dictionary, tariff_dictionary, flag = read_in_algorithm_codes_and_tariffs(
+    alg_codes_file)
 
 if flag[1] != 0:
     print("*** fatal error: there is something wrong with " + alg_codes_file)
@@ -794,7 +840,7 @@ if flag[1] != 0:
 if not os.path.isdir(user_name):
     print("*** fatal error: the folder " + user_name + " does not exist.")
     sys.exit()
-    
+
 student_record = {}
 
 os.chdir(user_name)
@@ -815,14 +861,18 @@ for item in list_of_contents:
 
 batch = "validating student programs"
 for program_cluster in programs_to_submit:
-    program_file_data, flag = collect_data_from_program_file(program_cluster[0], list_of_programs)
+    program_file_data, flag = collect_data_from_program_file(
+        program_cluster[0], list_of_programs)
     if len(flag) == 1:
-        program_file_data, flag = validate_a_program(user_name, program_file_data, code_dictionary, legal_modules)
+        program_file_data, flag = validate_a_program(
+            user_name, program_file_data, code_dictionary, legal_modules)
     student_record[program_cluster[0]] = [program_file_data, flag]
     if len(program_cluster) == 2:
-        program_file_data, flag = collect_data_from_program_file(program_cluster[1], list_of_programs)
+        program_file_data, flag = collect_data_from_program_file(
+            program_cluster[1], list_of_programs)
         if len(flag) == 1:
-            program_file_data, flag = validate_a_program(user_name, program_file_data, code_dictionary, legal_modules)
+            program_file_data, flag = validate_a_program(
+                user_name, program_file_data, code_dictionary, legal_modules)
         student_record[program_cluster[1]] = [program_file_data, flag]
         matched_codes = "Y"
         if student_record[program_cluster[0]][0][0] == "Y" and student_record[program_cluster[1]][0][0] == "Y":
@@ -839,23 +889,24 @@ for program_cluster in programs_to_submit:
                 overall_validity = "N"
     student_record[program_cluster[0]].append(overall_validity)
 list_of_bad_clusters = []
-length = len(programs_to_submit)                
-for i in range(0, length):                      
+length = len(programs_to_submit)
+for i in range(0, length):
     for j in range(i + 1, length):
         if student_record[programs_to_submit[i][0]][2] == "Y" and student_record[programs_to_submit[j][0]][2] == "Y" \
-        and student_record[programs_to_submit[i][0]][0][2] == student_record[programs_to_submit[j][0]][0][2]:
+                and student_record[programs_to_submit[i][0]][0][2] == student_record[programs_to_submit[j][0]][0][2]:
             list_of_bad_clusters.append(programs_to_submit[i])
             list_of_bad_clusters.append(programs_to_submit[j])
 for item in list_of_bad_clusters:
     student_record[item[0]][2] = "N"
     student_record[item[0]][1].append((batch, 2))
-    
+
 for tour_file_batch in tour_files_to_submit:
     for tour_file in tour_file_batch:
-        tour_file_data, flag = collect_data_from_tour_file(tour_file, list_of_tours)
+        tour_file_data, flag = collect_data_from_tour_file(
+            tour_file, list_of_tours)
         if len(flag) == 1:
             tour_file_data, flag = validate_a_tour(user_name, tour_file, tour_file_data, city_dictionary,
-                                                    code_dictionary, programs_to_submit, prefix_dictionary, student_record)
+                                                   code_dictionary, programs_to_submit, prefix_dictionary, student_record)
         else:
             tour_file_data.append(0)
         student_record[tour_file] = [tour_file_data, flag]
@@ -868,28 +919,6 @@ for item in additional_items_to_submit:
 student_record["additional_items"] = items_submitted
 
 os.chdir("..")
-        
+
 build_student_feedback_file(user_name, student_record, programs_to_submit, programs_prefix, tour_files_to_submit,
                             additional_items_to_submit, code_dictionary, tariff_dictionary, flag_dictionary)
-    
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
