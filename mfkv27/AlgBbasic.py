@@ -320,9 +320,8 @@ added_note = ""
 
 
 # ======== VARIABLE PARAMETERS ============ #
-t0 = 10000
-tmin = 1e-5
-alpha = 0.995
+t0 = 1e10
+tmin = 1e-8
 # ========================================= #
 
 # initialise the list of cities
@@ -408,16 +407,21 @@ class SA():
         return current_tour
 
 
-def run_SA(temp_start, temp_end, alpha):
+def run_SA(temp_start, temp_end):
     """
     Run the simulated annealing algorithm using the appropriate class methods above.
 
     The parameters (temperature) and the number of iterations can be modified to produce optimal results
     for the TSP tour generated.
+
+    Enhanced version of the annealing algorithm using a cooling schedule.
     """
 
     # initialise tour (random)
     current = Tour()
+
+    # initialise step_counter
+    t_step = 1
 
     # initial tour length
     initial_best_tour = current.length
@@ -433,15 +437,19 @@ def run_SA(temp_start, temp_end, alpha):
         # update the current tour
         current = succ
 
-        # update the temperature (using cooling factor)
-        temp *= alpha
+        # update the temperature (using cooling schedule)
+        beta = 1 + math.log(1 + t_step)
+        temp = temp_end / beta
+
+        # update counter
+        t_step += 1
 
     # return best tour found
     return initial_best_tour, current
 
 
 # Simulate TSP using Simulated Annealing
-initial_length, sa_tour = run_SA(t0, tmin, alpha)
+initial_length, sa_tour = run_SA(t0, tmin)
 
 tour = sa_tour.tour
 tour_length = sa_tour.length
